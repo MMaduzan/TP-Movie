@@ -22,6 +22,12 @@ API:
 - `http://localhost:3001/movies/1/screenings`
 - `http://localhost:3001/movies/1/seances`
 
+## Tests
+
+```bash
+pnpm test
+```
+
 ## Arrêter
 
 ```bash
