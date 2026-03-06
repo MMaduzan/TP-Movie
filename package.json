@@ -1,0 +1,22 @@
+{
+  "name": "tp-movie-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx watch server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "pg": "^8.20.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.3",
+    "@types/pg": "^8.18.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
