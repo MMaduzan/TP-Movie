@@ -28,6 +28,20 @@ API:
 pnpm test
 ```
 
+## Drizzle (Partie 2)
+
+```bash
+pnpm drizzle:generate
+pnpm drizzle:migrate
+docker exec -i db-postgres-movie psql -U postgres -d db_sandbox < seed.sql
+```
+
+Si `db_sandbox` n'existe pas deja :
+
+```bash
+docker exec -it db-postgres-movie psql -U postgres -d db -c "CREATE DATABASE db_sandbox;"
+```
+
 ## Arrêter
 
 ```bash

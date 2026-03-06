@@ -1,43 +1,35 @@
+import { asc, eq } from "drizzle-orm";
 import type { Pool } from "pg";
 import type { Screening } from "../Domain/Screening.js";
-
-type ScreeningRow = {
-  id: number;
-  movieId: number;
-  startTime: string;
-  price: number;
-  roomId: number;
-  roomName: string;
-  roomCapacity: number;
-};
+import { createDb } from "./drizzle.js";
+import { rooms, screenings } from "./schema.js";
 
 export class ScreeningRepository {
   public constructor(private readonly pool: Pool) {}
 
   public async listByMovieId(movieId: number): Promise<Screening[]> {
-    const result = await this.pool.query<ScreeningRow>(
-      `
-      select
-        s.id,
-        s.movie_id as "movieId",
-        s.start_time::text as "startTime",
-        s.price::float8 as "price",
-        r.id as "roomId",
-        r.name as "roomName",
-        r.capacity as "roomCapacity"
-      from screenings s
-      join rooms r on r.id = s.room_id
-      where s.movie_id = $1
-      order by s.start_time asc
-      `,
-      [movieId]
-    );
+    const db = createDb(this.pool);
 
-    return result.rows.map((row) => ({
+    const items = await db
+      .select({
+        id: screenings.id,
+        movieId: screenings.movieId,
+        startTime: screenings.startTime,
+        price: screenings.price,
+        roomId: rooms.id,
+        roomName: rooms.name,
+        roomCapacity: rooms.capacity,
+      })
+      .from(screenings)
+      .innerJoin(rooms, eq(rooms.id, screenings.roomId))
+      .where(eq(screenings.movieId, movieId))
+      .orderBy(asc(screenings.startTime));
+
+    return items.map((row) => ({
       id: row.id,
       movieId: row.movieId,
       startTime: row.startTime,
-      price: row.price,
+      price: Number(row.price),
       room: {
         id: row.roomId,
         name: row.roomName,
